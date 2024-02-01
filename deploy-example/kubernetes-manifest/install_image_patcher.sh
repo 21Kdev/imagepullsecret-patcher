@@ -36,14 +36,14 @@ then
 EOF
     )
 
-		master_node=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane= --output=jsonpath='{.items[0].metadata.name}')
-
-		if [ -z "$master_node" ]; then
-		  echo "마스터 노드를 찾을 수 없습니다."
-		  exit 1
-		fi
-
-		kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule-
+	master_node=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane= --output=jsonpath='{.items[0].metadata.name}')
+	
+	if [ -z "$master_node" ]; then
+	  echo "마스터 노드를 찾을 수 없습니다."
+	  exit 1
+	fi
+	
+	kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule-
 		
     encodedDockerConfigJson=$(echo -n "$dockerConfigJson" | base64 -w 0)
     kubectl apply -f https://raw.githubusercontent.com/21Kdev/imagepullsecret-patcher/master/deploy-example/kubernetes-manifest/0_namespace.yaml
