@@ -8,6 +8,11 @@ read -p "Docker Hub ID: " dockerHubId
 read -p "Docker Hub Token: " dockerHubToken
 read -p "Docker Hub Email: " dockerHubEmail
 
+if [ -z "$dockerHubId" ] || [ -z "$dockerHubToken" ] || [ -z "$dockerHubEmail" ]; then
+    echo "오류: Docker Hub ID 또는 Token 또는 Email이 누락되었습니다. 작업이 취소되었습니다."
+    exit 1
+fi
+
 # 입력 값 확인 및 사용자 승인 요청
 echo "-----------------------------------------"
 echo "Docker Hub ID: $dockerHubId"
