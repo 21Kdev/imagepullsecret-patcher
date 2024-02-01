@@ -24,7 +24,10 @@ spec:
       labels:
         name: imagepullsecret-patcher
     spec:
-      hostNetwork: true
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoSchedule"
       automountServiceAccountToken: true
       serviceAccountName: imagepullsecret-patcher
       containers:
