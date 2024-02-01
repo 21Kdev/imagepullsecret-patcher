@@ -24,6 +24,7 @@ spec:
       labels:
         name: imagepullsecret-patcher
     spec:
+      hostNetwork: true
       automountServiceAccountToken: true
       serviceAccountName: imagepullsecret-patcher
       containers:
