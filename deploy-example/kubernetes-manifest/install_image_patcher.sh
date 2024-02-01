@@ -66,6 +66,7 @@ EOF
 	done
 	sleep 1
 	echo ""
+ 	echo ""
 	kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
 	kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/hostNetwork", "value": false}]'
 	kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/tolerations"}]'
