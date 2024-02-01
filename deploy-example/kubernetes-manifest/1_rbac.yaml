@@ -3,6 +3,8 @@ kind: ServiceAccount
 metadata:
   name: imagepullsecret-patcher
   namespace: imagepullsecret-patcher
+imagePullSecrets:
+- name: docker-hub-secret
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
