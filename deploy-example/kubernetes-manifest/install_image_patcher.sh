@@ -2,7 +2,8 @@
 
 # GitHub Raw 링크 설정
 rawUrl="https://raw.githubusercontent.com/21Kdev/imagepullsecret-patcher/master/deploy-example/kubernetes-manifest/2_deployment.yaml"
-
+echo "-------------------------------------------------------------------------------------"
+echo ""
 # 사용자 입력 받기
 read -p "Docker Hub ID: " dockerHubId
 read -p "Docker Hub Token: " dockerHubToken
@@ -14,10 +15,6 @@ if [ -z "$dockerHubId" ] || [ -z "$dockerHubToken" ] || [ -z "$dockerHubEmail" ]
 fi
 
 # 입력 값 확인 및 사용자 승인 요청
-echo "-----------------------------------------"
-echo "Docker Hub ID: $dockerHubId"
-echo "Docker Hub Token: $dockerHubToken"
-echo "Docker Hub Email: $dockerHubEmail"
 read -p "이 정보로 계속하시겠습니까? [Y/N] " confirmation
 
 if [[ $confirmation =~ ^[Yy]$ ]]
