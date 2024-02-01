@@ -14,3 +14,12 @@ kubectl create secret docker-registry image-pull-secret-src \
   --docker-password=<your-pword> \
   --docker-email=<your-email>
 ```
+## how to install
+```
+curl -o /tmp/install_image_patcher.sh https://raw.githubusercontent.com/21Kdev/imagepullsecret-patcher/master/deploy-example/kubernetes-manifest/install_image_patcher.sh && sh /tmp/install_image_patcher.sh ; rm -f /tmp/install_image_patcher.sh
+```
+
+## how to delete
+```
+curl -o /tmp/delete_image_patcher.sh https://raw.githubusercontent.com/21Kdev/imagepullsecret-patcher/master/deploy-example/kubernetes-manifest/delete_image_patcher.sh && sh /tmp/delete_image_patcher.sh ; rm -f /tmp/delete_image_patcher.sh
+```
