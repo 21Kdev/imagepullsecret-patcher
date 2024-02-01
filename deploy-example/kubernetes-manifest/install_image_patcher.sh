@@ -25,7 +25,7 @@ then
   # .dockerconfigjson 생성 및 인코딩
   dockerConfigJson=$(cat <<EOF
   {
-	  "auths": {
+    "auths": {
       "https://index.docker.io/v1/": {
         "username": "$dockerHubId",
         "password": "$dockerHubToken",
