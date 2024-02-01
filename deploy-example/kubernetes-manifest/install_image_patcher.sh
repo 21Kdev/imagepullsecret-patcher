@@ -37,12 +37,12 @@ EOF
     )
 
 	master_node=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane= --output=jsonpath='{.items[0].metadata.name}')
-	
+
 	if [ -z "$master_node" ]; then
 	  echo "마스터 노드를 찾을 수 없습니다."
 	  exit 1
 	fi
-	
+
 	kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule-
 		
     encodedDockerConfigJson=$(echo -n "$dockerConfigJson" | base64 -w 0)
@@ -51,23 +51,24 @@ EOF
     # GitHub Raw 링크로부터 YAML 파일 내용 가져오기, 수정 후 적용
     curl -s $rawUrl | sed "s/eyJhdXRocyI6eyJnY3IuaW8iOnsicGFzc3dvcmQiOiJ7XCJhdXRoXCI6e1wiZ2NyLmlvXCI6e1widXNlcm5hbWVcIjpcIl9qc29uX2tleVwiLFwicGFzc3dvcmRcIjpcInt9XCJ9fX0iLCJ1c2VybmFtZSI6Il9qc29uX2tleSJ9fX0=/$encodedDockerConfigJson/" | kubectl apply -f -
 		
-    # Deployment의 파드가 1/1이 되기를 기다립니다.
-    echo -n "imagepullsecret-patcher pod 생성을 기다리는 중입니다..."
-    while true; do
-        echo -ne "\b\b\b"
-      desired=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.spec.replicas}')
-      current=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.status.replicas}')
-      if [ "$desired" -eq "$current" ]; then
-        break
-      fi
-      sleep 0.5
-        echo -ne "..."
-    done
-    sleep 1
-    
-    kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
-    kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/hostNetwork", "value": false}]'
-    kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/tolerations"}]'
+	# Deployment의 파드가 1/1이 되기를 기다립니다.
+	echo -n "imagepullsecret-patcher pod 생성을 기다리는 중입니다"
+	while true; do
+		echo -ne "..."
+	  desired=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.spec.replicas}')
+	  current=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.status.replicas}')
+	  if [ "$desired" -eq "$current" ]; then
+		break
+	  fi
+	  sleep 0.5
+		
+		echo -ne "\b\b\b"
+	done
+	sleep 1
+	echo ""
+	kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
+	kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/hostNetwork", "value": false}]'
+	kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/tolerations"}]'
 else
     echo "작업이 취소되었습니다."
 fi
