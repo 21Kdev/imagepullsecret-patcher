@@ -65,9 +65,9 @@ EOF
   
   echo ""
   echo ""
-  kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
   kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/hostNetwork", "value": false}]'
   kubectl patch deployment imagepullsecret-patcher -n imagepullsecret-patcher --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/tolerations"}]'
+  kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
 else
   echo "작업이 취소되었습니다."
 fi
