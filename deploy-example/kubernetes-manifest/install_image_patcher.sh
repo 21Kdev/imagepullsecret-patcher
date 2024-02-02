@@ -55,6 +55,7 @@ EOF
     echo -ne "..."
     desired=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.spec.replicas}')
     current=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.status.readyReplicas}')
+    current=${current:-0}
     if [ "$desired" -eq "$current" ]; then
       sleep 1
       break
