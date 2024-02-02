@@ -4,6 +4,7 @@
 rawUrl="https://raw.githubusercontent.com/21Kdev/imagepullsecret-patcher/master/deploy-example/kubernetes-manifest/2_deployment.yaml"
 
 # 사용자 입력 받기
+echo "----------------------------------------------------------------------------------------"
 read -p "Docker Hub ID: " dockerHubId
 read -p "Docker Hub Token: " dockerHubToken
 read -p "Docker Hub Email: " dockerHubEmail
@@ -14,10 +15,7 @@ if [ -z "$dockerHubId" ] || [ -z "$dockerHubToken" ] || [ -z "$dockerHubEmail" ]
 fi
 
 # 입력 값 확인 및 사용자 승인 요청
-echo "-----------------------------------------"
-echo "Docker Hub ID: $dockerHubId"
-echo "Docker Hub Token: $dockerHubToken"
-echo "Docker Hub Email: $dockerHubEmail"
+echo ""
 read -p "이 정보로 계속하시겠습니까? [Y/N] " confirmation
 
 if [[ $confirmation =~ ^[Yy]$ ]]
@@ -56,14 +54,15 @@ EOF
   while true; do
     echo -ne "..."
     desired=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.spec.replicas}')
-    current=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.status.replicas}')
+    current=$(kubectl get deployment imagepullsecret-patcher -n imagepullsecret-patcher --output=jsonpath='{.status.readyReplicas}')
     if [ "$desired" -eq "$current" ]; then
+      sleep 1
       break
     fi
     sleep 0.5	
     echo -ne "\b\b\b"
   done
-  sleep 1
+  
   echo ""
   echo ""
   kubectl taint nodes $master_node node-role.kubernetes.io/control-plane:NoSchedule
